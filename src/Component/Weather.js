@@ -1,49 +1,57 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Weather.css';
-//import ClearIcon from '../Clear.png';  // Adjust the path based on the actual location of Clear.jpeg
-import CloudyIcon from '../cloudy.png';  // Adjust the path based on the actual location of cloudy.jpg
- import ThunderIcon from '../thunder.png';  // Adjust the path based on the actual location of thunder.jpg
-import WindIcon from '../wind.png';  // Adjust the path based on the actual location of wind.jpg
-//import searchIcon from '../search.png';
-const WeatherApp =() => {
-  
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(element.value)}&units=Metric&appid=${apiKey}`;
-    let response = await fetch(url);
-  
-    //  
-    let data = await response.json();
-  
-    // Check if the required properties exist in the response
-    if (!data || !data.main || !data.main.humidity || !data.wind || !data.wind.speed || !data.main.temp || !data.name) {
-      console.error("Invalid data structure received from the API");
-      return;
+import CloudyIcon from '../cloudy.png';
+import ThunderIcon from '../thunder.png';
+import WindIcon from '../wind.png';
+
+const WeatherApp = () => {
+  const [city, setCity] = useState(null);
+  const [search, setSearch] = useState("Delhi");
+  const [temperature, setTemperature] = useState("24");
+
+  const fetchApi = async () => {
+    try {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=2196ed51639f7325c59259f2bfa0446d`;
+      const response = await fetch(url);
+      const resJson = await response.json();
+
+      if (response.ok) {
+        setCity(resJson.name);
+        if (resJson.main) {
+          const temperatureCelsius = (resJson.main.temp - 273.15).toFixed(2);
+          setTemperature(temperatureCelsius);
+        }
+      } else {
+        console.error('Error fetching weather data:', resJson.message);
+      }
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
     }
-  
-    const Humidity = document.getElementsByClassName("humidity-percentage");
-    const Wind = document.getElementsByClassName("wind-rate");
-    const temperature = document.getElementsByClassName("weather-temp");
-    const location = document.getElementsByClassName("weather-location");
-  
-    Humidity[0].innerHTML = data.main.humidity;
-    Wind[0].innerHTML = data.wind.speed;
-    temperature[0].innerHTML = data.main.temp;
-    location[0].innerHTML = data.name;
   };
-  
+
+  const handleSearch = (event) => {
+    event.preventDefault(); // Prevents the default form submission behavior
+    fetchApi(); // Fetch and update weather data
+  };
+
+  useEffect(() => {
+    fetchApi();
+  }, [search]);
   return (
    
 
     <div className="container">
       <form className="d-flex" role="search">
-        <input className="form-control me-2 justify-content"style={{height:'50px'}} type="search" placeholder="Search" aria-label="Search"/>
-        <button className="btn btn-outline-success "onClick={()=>{search()}} type="submit">Search</button>
+        <input className="form-control me-2 justify-content" onChange={(event)=>{setSearch(event.target.value)}} value={search}style={{height:'50px'}} type="search" placeholder="Search" aria-label="Search"/>
+        <button className="btn btn-outline-success "onClick={handleSearch} type="submit">Search</button>
       </form>
       
       <div className="weatherImage" style={{height:'150px'}}>
       <img src={CloudyIcon} alt=""style={{height:'150px'}} />
       </div>
-      <div className="weather-temp" style={{color:'white' ,fontFamily:`''Times New Roman', serif;'`}}>24&deg;C </div>
-      <div className="weather-location"style={{color:'white' ,fontFamily:`''Times New Roman', serif;'`}}>London</div>
+      
+      <div className="weather-location"style={{color:'white' ,fontFamily:`''Times New Roman', serif;'`}}>{city}</div>
+      <div className="weather-temp" style={{color:'white' ,fontFamily:`''Times New Roman', serif;'`}}>{temperature}&deg;C </div>
 
       <div className="data-container">
         <div className="element">
