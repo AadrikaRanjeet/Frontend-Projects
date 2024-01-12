@@ -6,13 +6,6 @@ import CloudyIcon from '../cloudy.png';  // Adjust the path based on the actual 
 import WindIcon from '../wind.png';  // Adjust the path based on the actual location of wind.jpg
 //import searchIcon from '../search.png';
 const WeatherApp =() => {
-  let apiKey='2196ed51639f7325c59259f2bfa0446d'
-  const search = async () => {
-    const element = document.querySelector(".form-control");
-    if (!element || !element.value) {
-      console.error("Invalid search input");
-      return;
-    }
   
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(element.value)}&units=Metric&appid=${apiKey}`;
     let response = await fetch(url);
