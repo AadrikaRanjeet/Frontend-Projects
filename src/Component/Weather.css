@@ -1,6 +1,6 @@
 .container
 {
-    width:600px;
+    width:700px;
     height:700px;
     margin: auto;
     text-align: center;
@@ -14,9 +14,15 @@
 .d-flex
 {
    display: flex;
-   width: 340px;
+   justify-content: center;
+   width: 620px;
    gap: 14px;
-   padding-top: 10px;
+   padding-top: 30px;
+}
+.form-control
+{
+  text-align: center;
+  width: 215px;
 }
 .weatherImage
 {

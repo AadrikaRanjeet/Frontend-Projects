@@ -8,7 +8,8 @@ const WeatherApp = () => {
   const [city, setCity] = useState(null);
   const [search, setSearch] = useState("Delhi");
   const [temperature, setTemperature] = useState("24");
-
+  const [Humidity, setHumidity]=useState(null);
+  const [windSpeed,setWindSpeed]=useState(null);
   const fetchApi = async () => {
     try {
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=2196ed51639f7325c59259f2bfa0446d`;
@@ -17,9 +18,11 @@ const WeatherApp = () => {
 
       if (response.ok) {
         setCity(resJson.name);
+        setWindSpeed(resJson.wind.speed);
         if (resJson.main) {
           const temperatureCelsius = (resJson.main.temp - 273.15).toFixed(2);
           setTemperature(temperatureCelsius);
+          setHumidity(resJson.main.humidity);
         }
       } else {
         console.error('Error fetching weather data:', resJson.message);
@@ -27,6 +30,7 @@ const WeatherApp = () => {
     } catch (error) {
       console.error('Error fetching weather data:', error);
     }
+   
   };
 
   const handleSearch = (event) => {
@@ -40,10 +44,10 @@ const WeatherApp = () => {
   return (
    
 
-    <div className="container">
+    <div className="container ">
       <form className="d-flex" role="search">
-        <input className="form-control me-2 justify-content" onChange={(event)=>{setSearch(event.target.value)}} value={search}style={{height:'50px'}} type="search" placeholder="Search" aria-label="Search"/>
-        <button className="btn btn-outline-success "onClick={handleSearch} type="submit">Search</button>
+        <input className="form-control ms-6 justify-content rounded-pill" onChange={(event)=>{setSearch(event.target.value)}} value={search}style={{height:'50px', borderRadius:'25px'}} type="search" placeholder="Search" aria-label="Search"/>
+        <button className="btn btn-outline-success justify-content rounded-pill "onClick={handleSearch} type="submit">Search</button>
       </form>
       
       <div className="weatherImage" style={{height:'150px'}}>
@@ -57,14 +61,14 @@ const WeatherApp = () => {
         <div className="element">
           <img src={ThunderIcon} alt="" style={{height:'90px'}}/>
           <div className="data"style={{color:'white' ,fontFamily:`''Times New Roman', serif;'`}}>
-            <div className="humdity-percentage">64%</div>
+            <div className="humdity-percentage">{Humidity}%</div>
             <div className="text">Humidity</div>
           </div>
         </div>
         <div className="element">
           <img src={WindIcon} alt="" />
           <div className="data"style={{color:'white' ,fontFamily:`''Times New Roman', serif;'`}}>
-            <div className="wind-rate">18km/h</div>
+            <div className="wind-rate">{windSpeed}km/h</div>
             <div className="text">Wind</div>
           </div>
         </div>
